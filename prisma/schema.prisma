@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Provider {
+  id           String    @id @default(uuid())
+  code         String    @unique // Contoh: DIGIFLAZZ, VIP_PAYMENT
+  name         String
+  base_url     String?   // URL Utama Endpoint hulu
+  api_key      String?   // Mock secret key
+  status       String    @default("ACTIVE") // ACTIVE, MAINTENANCE
+  products     Product[] // Relasi one-to-many ke Produk
+}
+
+model Product {
+  id               String        @id @default(uuid())
+  code             String        @unique
+  type             String        // PULSA, GAME, PLN
+  name             String
+  cost_price       Float
+  sell_price       Float
+  status           String        @default("ACTIVE")
+  
+  // Relasi ke Provider Eksternal
+  provider_code    String
+  provider         Provider      @relation(fields: [provider_code], references: [code])
+  
+  transactions     Transaction[]
+}
+
+model Transaction {
+  id                String   @id @default(uuid())
+  trx_code          String   @unique
+  product_code      String
+  product           Product  @relation(fields: [product_code], references: [code])
+  customer_number   String
+  merchant_id       String
+  status            String   @default("PENDING")
+  
+  // Tambahan Krusial:
+  sn                String?  // SN/Token aseli yang dikembalikan
+  provider_trx_code String?  // ID Unik internal dari pihak Provider (misal: "VIP-120042")
+  
+  notes             String?
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+}
