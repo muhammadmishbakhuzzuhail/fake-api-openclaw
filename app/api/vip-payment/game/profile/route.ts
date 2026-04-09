@@ -14,7 +14,7 @@ export async function GET(req: Request) {
     where: { provider_code: 'VIP_PAYMENT' }
   });
 
-  const vipData = products.map(p => ({
+  const vipData = products.map((p: any) => ({
      code: p.code,
      game: "Mobile Legends / Free Fire",
      name: p.name,

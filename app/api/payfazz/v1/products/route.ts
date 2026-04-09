@@ -7,7 +7,7 @@ export async function GET(req: Request) {
     where: { provider_code: 'PAYFAZZ' }
   });
 
-  const pfData = products.map(p => ({
+  const pfData = products.map((p: any) => ({
      productID: p.code,
      productName: p.name,
      priceInfo: { base: p.cost_price, admin: 1500 },

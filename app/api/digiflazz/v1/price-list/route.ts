@@ -17,7 +17,7 @@ export async function POST(req: Request) {
       where: { provider_code: 'DIGIFLAZZ' }
     });
 
-    const parsedData = products.map(p => ({
+    const parsedData = products.map((p: any) => ({
       buyer_sku_code: p.code,
       product_name: p.name,
       category: p.type,
